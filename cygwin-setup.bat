@@ -1,11 +1,11 @@
 @echo off
 
 :: BatchGotAdmin
-:-------------------------------------
-REM  --> Check for permissions
+::-------------------------------------
+::  --> Check for permissions
 >nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
 
-REM --> If error flag set, we do not have admin.
+:: --> If error flag set, we do not have admin.
 if '%errorlevel%' NEQ '0' (
     echo Requesting administrative privileges...
     goto UACPrompt
@@ -23,70 +23,61 @@ if '%errorlevel%' NEQ '0' (
 :gotAdmin
     pushd "%CD%"
     CD /D "%~dp0"
-:--------------------------------------
+::--------------------------------------
 
-set CYGWIN_URL="http://cygwin.com/setup-x86_64.exe"
-::set CYGWIN_URL="http://cygwin.com/setup-x86.exe"
+::set CYGWIN_URL="http://cygwin.com/setup-x86_64.exe"
+set CYGWIN_URL="http://cygwin.com/setup-x86.exe"
 set CYG_MIRROR="http://cygwin.mirrors.pair.com/"
 set CYGWIN_DIR="C:\cygwin"
-set CYGWIN_PACKAGES="aria2,atool,autossh,openssh,git";
+set CYGWIN_PACKAGES="wget,atool,unzip,autossh,openssh,git";
 
+::goto :scripts
+
+:: ------------------
+:: CYGWIN INSTALATION
+:cygwin
 echo *** Creating: %CYGWIN_DIR%
 mkdir "%CYGWIN_DIR%"
 cd "%CYGWIN_DIR%"
 
-echo *** Fetching: %CYGWIN_URL%
-:: Using bitsadmin might have been more elegant, but it's a deprecated command :(
-:: Also, while it could have been possible to write the whole thing as a powershell script,
-:: since you can't run unsigned powershell scripts without configuring it (which requires admin rights)
-:: I opted to do it this way, through a batch script. This allows for unpriviledged installation.  
-powershell "try {(New-Object System.Net.WebClient).DownloadFile(\"%CYGWIN_URL%\", \"./cygsetup.exe\") } catch {$error[0]}"
+where cygsetup 2> NUL
+if not %ERRORLEVEL%==0 (
+	echo *** Fetching: %CYGWIN_URL%
+	:: Using bitsadmin might have been more elegant, but it's a deprecated command :(
+	:: Also, while it could have been possible to write the whole thing as a powershell script,
+	:: it's not straightforward since you can't run unsigned powershell scripts without explicitly 
+	:: configuring it (which requires administrator rights)
+	powershell "try {(New-Object System.Net.WebClient).DownloadFile(\"%CYGWIN_URL%\", \"./cygsetup.exe\") } catch {$error[0]}"
+)
 
+echo *** Installing Cygwin base system
+mkdir "var\cygsetup" 2> NUL
+start /wait cygsetup -qADLXg -s %CYG_MIRROR% -l "var\cygsetup" -R "%CYGWIN_DIR%"
+if not %ERRORLEVEL%==0 goto :error
 
-echo *** Installing Cygwin
-mkdir "var\cyglocal"
-start /wait cygsetup -qDLX -s %CYG_MIRROR% -l "var\cyglocal" -R "%CYGWIN_DIR%"
-
-echo *** Installing: %CYGWIN_PACKAGES%
-start /wait cygsetup -qDLX -s %CYG_MIRROR% -l "var\cyglocal" -R "%CYGWIN_DIR%" --packages "%CYGWIN_PACKAGES%"
+echo *** Installing Cygwin packages: %CYGWIN_PACKAGES%
+start /wait cygsetup -qADLXg -s %CYG_MIRROR% -l "var\cygsetup" -R "%CYGWIN_DIR%" --packages "%CYGWIN_PACKAGES%"
+if not %ERRORLEVEL%==0 goto :error
 
 set PATH="%PATH%;%CYGWIN_DIR%\bin";
 ::setx path "%PATH%";
 
-echo *** Running bash...
-call :heredoc bash-script && goto end
-############
+:: -----------------
+:: RUN SETUP SCRIPTS
+:scripts
+echo *** Running bash scripts
+cd "%~dp0"
+set CYGWIN="nodosfilewarning"
+for %%i in (setup.d\*) do (
+	echo **** Running: %%i
+	%CYGWIN_DIR%\bin\bash %%i
+)
 
-mintty.exe -e sh -c 
-
-## BASH_SCRIPT
-
-git clone https://github.com/Ferk/xdg_config.git ~/.config
-
-############
+:: -----------------
 :end
 echo *** Exiting...
 pause
 goto :EOF
-
-:: ########################################
-:: ## Here's the heredoc processing code ##
-:: ########################################
-:heredoc <uniqueIDX>
-setlocal enabledelayedexpansion
-setlocal enableextensions
-set go=
-for /f "delims=" %%A in ('findstr /n "^" "%~f0"') do (
-    set "line=%%A" && set "line=!line:*:=!"
-    if defined go (if #!line:~1!==#!go::=! (goto :EOF) else echo(!line!)
-    if "!line:~0,13!"=="call :heredoc" (
-        for /f "tokens=3 delims=>^ " %%i in ("!line!") do (
-            if #%%i==#%1 (
-                for /f "tokens=2 delims=&" %%I in ("!line!") do (
-                    for /f "tokens=2" %%x in ("%%I") do set "go=%%x"
-                )
-            )
-        )
-    )
-)
-goto :EOF
+:error
+echo *** Errors found!
+goto :end

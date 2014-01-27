@@ -1,6 +1,8 @@
 #!/bin/sh
 
+mkdir -p ~/.config
+cd ~/.config
 
-git clone https://github.com/Ferk/xdg_config.git ~/.config
+git pull || git clone https://github.com/Ferk/xdg_config.git .
 
-~/.config/symlinks.sh
+./symlink.sh -f

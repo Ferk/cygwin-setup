@@ -25,13 +25,11 @@ if '%errorlevel%' NEQ '0' (
     CD /D "%~dp0"
 ::--------------------------------------
 
-::set CYGWIN_URL="http://cygwin.com/setup-x86_64.exe"
-set CYGWIN_URL="http://cygwin.com/setup-x86.exe"
+set CYGWIN_URL="http://cygwin.com/setup-x86_64.exe"
+::set CYGWIN_URL="http://cygwin.com/setup-x86.exe"
 set CYG_MIRROR="http://cygwin.mirrors.pair.com/"
-set CYGWIN_DIR="C:\cygwin"
-set CYGWIN_PACKAGES="wget,atool,unzip,autossh,openssh,git";
-
-::goto :scripts
+set CYGWIN_DIR="C:\cygwin64"
+set CYGWIN_PACKAGES="wget,atool,unzip,autossh,openssh,git,chere";
 
 :: ------------------
 :: CYGWIN INSTALATION
@@ -59,8 +57,12 @@ echo *** Installing Cygwin packages: %CYGWIN_PACKAGES%
 start /wait cygsetup -qADLXg -s %CYG_MIRROR% -l "var\cygsetup" -R "%CYGWIN_DIR%" --packages "%CYGWIN_PACKAGES%"
 if not %ERRORLEVEL%==0 goto :error
 
-set PATH="%PATH%;%CYGWIN_DIR%\bin";
-::setx path "%PATH%";
+where bash 2> NUL
+if not %ERRORLEVEL%==0 (
+	echo *** Adding cygwin tools to Windows PATH
+	set PATH="%PATH%;%CYGWIN_DIR%\bin";
+	setx path "%PATH%";
+)
 
 :: -----------------
 :: RUN SETUP SCRIPTS

@@ -28,7 +28,7 @@ if '%errorlevel%' NEQ '0' (
 set CYGWIN_URL="http://cygwin.com/setup-x86_64.exe"
 ::set CYGWIN_URL="http://cygwin.com/setup-x86.exe"
 set CYG_MIRROR="http://cygwin.mirrors.pair.com/"
-set CYGWIN_DIR="C:\cygwin64"
+set CYGWIN_DIR=C:\cygwin64
 set CYGWIN_PACKAGES="wget,atool,unzip,autossh,openssh,git,chere";
 
 :: ------------------
@@ -48,34 +48,47 @@ if not %ERRORLEVEL%==0 (
 	powershell "try {(New-Object System.Net.WebClient).DownloadFile(\"%CYGWIN_URL%\", \"./cygsetup.exe\") } catch {$error[0]}"
 )
 
+echo.
 echo *** Installing Cygwin base system
 mkdir "var\cygsetup" 2> NUL
 start /wait cygsetup -qADLXg -s %CYG_MIRROR% -l "var\cygsetup" -R "%CYGWIN_DIR%"
-if not %ERRORLEVEL%==0 goto :error
+:: if not %ERRORLEVEL%==0 goto :error
 
 echo *** Installing Cygwin packages: %CYGWIN_PACKAGES%
 start /wait cygsetup -qADLXg -s %CYG_MIRROR% -l "var\cygsetup" -R "%CYGWIN_DIR%" --packages "%CYGWIN_PACKAGES%"
-if not %ERRORLEVEL%==0 goto :error
+:: if not %ERRORLEVEL%==0 goto :error
 
-where bash 2> NUL
-if not %ERRORLEVEL%==0 (
-	echo *** Adding cygwin tools to Windows PATH
-	set PATH="%PATH%;%CYGWIN_DIR%\bin";
-	setx path "%PATH%";
-)
+:: -----------------
+:: Check that bash is available
+bash --version >NUL
+if %ERRORLEVEL% == 0 goto :scripts
+
+echo.
+echo *** Adding cygwin tools (%CYGWIN_DIR%\bin) to Windows PATH
+set PATH=%PATH%;%CYGWIN_DIR%\bin
+echo NEW PATH: %PATH%
+bash --version >NUL
+if not %ERRORLEVEL% == 0 goto :error
+setx path %PATH%
 
 :: -----------------
 :: RUN SETUP SCRIPTS
 :scripts
+echo.
 echo *** Running bash scripts
 cd "%~dp0"
 set CYGWIN="nodosfilewarning"
 for %%i in (setup.d\*) do (
-	echo **** Running: %%i
-	%CYGWIN_DIR%\bin\bash %%i
+  echo.
+  echo **** Running: %%i
+  echo.
+  %CYGWIN_DIR%\bin\bash %%i
+  if not %ERRORLEVEL% == 0 timeout /t 10
 )
 
 :: -----------------
+echo.
+echo *** Success!!
 :end
 echo *** Exiting...
 pause

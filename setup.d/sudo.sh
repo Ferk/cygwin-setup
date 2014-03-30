@@ -7,10 +7,11 @@ do
 	case "\$opt" in
 		u) 	user="\$OPTARG" ;;
 		b)  ;; # cygstart always opens new window
+		"?") continue ;;
 		*)	echo "sudo: no support for '-\$opt'" ;;
 	esac
 done
 shift \$((OPTIND-1))
-cygstart --action=runas "\$@"
+[[ \$1 ]] && cygstart --action=runas "\$@"
 EOF
 chmod +x /bin/sudo

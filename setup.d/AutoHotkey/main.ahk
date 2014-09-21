@@ -10,6 +10,9 @@ SoundPlay, *48
 
 LAlt & F1:: Run mintty.exe
 
+;; Toggle AlwaysOnTop for the currently selected window
+#t::  Winset, Alwaysontop, , A
+
 ;; WASD navigation
 LWin & w::AltTab
 LWin & s::ShiftAltTab

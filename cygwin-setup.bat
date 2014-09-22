@@ -1,4 +1,5 @@
 @echo off
+@setlocal ENABLEEXTENSIONS
 
 :: BatchGotAdmin
 ::-------------------------------------
@@ -34,12 +35,14 @@ set CYGWIN_PACKAGES="wget,atool,unzip,autossh,openssh,git,chere";
 :: ------------------
 :: CYGWIN INSTALATION
 :cygwin
+echo.
 echo *** Creating: %CYGWIN_DIR%
 mkdir "%CYGWIN_DIR%"
 cd "%CYGWIN_DIR%"
 
 where cygsetup 2> NUL
 if not %ERRORLEVEL%==0 (
+	echo.
 	echo *** Fetching: %CYGWIN_URL%
 	:: Using bitsadmin might have been more elegant, but it's a deprecated command :(
 	:: Also, while it could have been possible to write the whole thing as a powershell script,
@@ -47,16 +50,20 @@ if not %ERRORLEVEL%==0 (
 	:: configuring it (which requires administrator rights)
 	powershell "try {(New-Object System.Net.WebClient).DownloadFile(\"%CYGWIN_URL%\", \"./cygsetup.exe\") } catch {$error[0]}"
 )
+if not %ERRORLEVEL%==0 goto :error
 
 echo.
 echo *** Installing Cygwin base system
-mkdir "var\cygsetup" 2> NUL
-start /wait cygsetup -qADLXg -s %CYG_MIRROR% -l "var\cygsetup" -R "%CYGWIN_DIR%"
-:: if not %ERRORLEVEL%==0 goto :error
+mkdir -p "%CYGWIN_DIR%\var\cygsetup" 2> NUL
+start /wait cygsetup -qADg -s "%CYG_MIRROR%" -l  "%CYGWIN_DIR%\var\cygsetup" -R "%CYGWIN_DIR%"
 
+if not %ERRORLEVEL%==0 goto :error
+
+echo.
 echo *** Installing Cygwin packages: %CYGWIN_PACKAGES%
-start /wait cygsetup -qADLXg -s %CYG_MIRROR% -l "var\cygsetup" -R "%CYGWIN_DIR%" --packages "%CYGWIN_PACKAGES%"
-:: if not %ERRORLEVEL%==0 goto :error
+start /wait cygsetup -qADg -s "%CYG_MIRROR%" -l "%CYGWIN_DIR%\var\cygsetup" -R "%CYGWIN_DIR%" --packages "%CYGWIN_PACKAGES%"
+
+if not %ERRORLEVEL%==0 goto :error
 
 :: -----------------
 :: Check that bash is available

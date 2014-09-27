@@ -28,7 +28,6 @@ if '%errorlevel%' NEQ '0' (
 
 set CYGWIN_URL="http://cygwin.com/setup-x86_64.exe"
 ::set CYGWIN_URL="http://cygwin.com/setup-x86.exe"
-set CYG_MIRROR="http://cygwin.mirrors.pair.com/"
 set CYGWIN_DIR=C:\cygwin64
 set CYGWIN_PACKAGES="wget,atool,unzip,autossh,openssh,git,chere";
 
@@ -55,7 +54,8 @@ if not %ERRORLEVEL%==0 goto :error
 echo.
 echo *** Installing Cygwin
 mkdir -p "%CYGWIN_DIR%\var\cygsetup" 2> NUL
-start /wait cygsetup -MAWDLg -l  "%CYGWIN_DIR%\var\cygsetup" -R "%CYGWIN_DIR%" -C "Base" --packages "%CYGWIN_PACKAGES%"
+start /wait cygsetup -MAWDLg -l  "%CYGWIN_DIR%\var\cygsetup" -R "%CYGWIN_DIR%" ^
+	-C "Base" --packages "%CYGWIN_PACKAGES%"
 if not %ERRORLEVEL%==0 goto :error
 
 :: -----------------
@@ -74,14 +74,30 @@ setx path %PATH%
 :: -----------------
 :: RUN SETUP SCRIPTS
 :scripts
-     
-:: Download and unpack scripts if not existing                                                                                                                                                                                                                                
-bash -c "[ -d setup.d  ] ||{ wget 'https://github.com/Ferk/cygwin-setup/archive/master.tar.gz' -O- | tar xzv && cd cygwin-setup-master;}"
-
-echo.
-echo *** Running bash scripts
 cd "%~dp0"
 set CYGWIN="nodosfilewarning"
+if exist setup.d goto :scriptsRun
+echo.
+echo Warning: no setup scripts directory found in working directory.
+echo          Will use /opt/cygwin-setup instead.
+cd "%CYGWIN_DIR%\"
+if not exist opt mkdir opt
+cd opt
+if exist cygwin-setup goto :scriptsUseGit
+
+echo.
+echo *** Fetching setup scripts
+:: Download and unpack scripts if not existing
+git clone 'https://github.com/Ferk/cygwin-setup' cygwin-setup
+if not %ERRORLEVEL%==0 goto :error
+
+:scriptsUseGit
+cd cygwin-setup
+git pull
+
+:scriptsRun
+echo.
+echo *** Running setup scripts
 for %%i in (setup.d\*) do (
   echo.
   echo **** Running: %%i

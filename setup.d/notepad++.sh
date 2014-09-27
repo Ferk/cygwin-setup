@@ -11,7 +11,7 @@ chmod +x npp.$VERSION.Installer.exe
 	
 ./npp.$VERSION.Installer.exe /S
 
-if cd "$(cygpath "$APPDATA")"
+if cd "$(cygpath "$APPDATA")" && ! [ -e "Notepad++/config.xml" ]
 then
 	mkdir -p "Notepad++"
 	cat Notepad++/config.xml <<"EOF"
@@ -128,7 +128,8 @@ then
 EOF
 	
 else
-
+	echo "The notepad++ configuration wasn't set"
+	echo "(either it existed already, or we couldn't access '$APPDATA')"
 fi
 
 

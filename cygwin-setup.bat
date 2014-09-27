@@ -53,16 +53,9 @@ if not %ERRORLEVEL%==0 (
 if not %ERRORLEVEL%==0 goto :error
 
 echo.
-echo *** Installing Cygwin base system
+echo *** Installing Cygwin
 mkdir -p "%CYGWIN_DIR%\var\cygsetup" 2> NUL
-start /wait cygsetup -qADg -s "%CYG_MIRROR%" -l  "%CYGWIN_DIR%\var\cygsetup" -R "%CYGWIN_DIR%"
-
-if not %ERRORLEVEL%==0 goto :error
-
-echo.
-echo *** Installing Cygwin packages: %CYGWIN_PACKAGES%
-start /wait cygsetup -qADg -s "%CYG_MIRROR%" -l "%CYGWIN_DIR%\var\cygsetup" -R "%CYGWIN_DIR%" --packages "%CYGWIN_PACKAGES%"
-
+start /wait cygsetup -MAWDLg -l  "%CYGWIN_DIR%\var\cygsetup" -R "%CYGWIN_DIR%" -C "Base" --packages "%CYGWIN_PACKAGES%"
 if not %ERRORLEVEL%==0 goto :error
 
 :: -----------------

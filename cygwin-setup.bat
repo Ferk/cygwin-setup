@@ -74,6 +74,10 @@ setx path %PATH%
 :: -----------------
 :: RUN SETUP SCRIPTS
 :scripts
+     
+:: Download and unpack scripts if not existing                                                                                                                                                                                                                                
+bash -c "[ -d setup.d  ] ||{ wget 'https://github.com/Ferk/cygwin-setup/archive/master.tar.gz' -O- | tar xzv && cd cygwin-setup-master;}"
+
 echo.
 echo *** Running bash scripts
 cd "%~dp0"

@@ -29,7 +29,7 @@ if '%errorlevel%' NEQ '0' (
 set CYGWIN_URL="http://cygwin.com/setup-x86_64.exe"
 ::set CYGWIN_URL="http://cygwin.com/setup-x86.exe"
 set CYGWIN_DIR=C:\cygwin64
-set CYGWIN_PACKAGES="wget,atool,unzip,autossh,openssh,git,chere";
+set CYGWIN_PACKAGES="cygutils,cygutils-extra,wget,atool,unzip,openssh,git,chere,shutdown,nosleep,ncdu";
 
 :: ------------------
 :: CYGWIN INSTALATION

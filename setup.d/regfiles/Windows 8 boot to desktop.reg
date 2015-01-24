@@ -1,0 +1,5 @@
+Windows Registry Editor Version 5.00
+
+; Boot To Desktop
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\StartPage]
+“OpenAtLogon”=dword:00000000

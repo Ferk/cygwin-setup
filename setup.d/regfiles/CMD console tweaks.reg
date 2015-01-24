@@ -1,0 +1,7 @@
+Windows Registry Editor Version 5.00
+; Usual disclaimers apply - don't edit the registry unless you know what you are doing and
+; BACKUP THE REGISTRY FIRST
+
+[HKEY_CURRENT_USER\Console]
+; Allow copy and paste from the command line.
+"QuickEdit"=dword:00000001

@@ -31,6 +31,10 @@ try {
 	exitmsg 1 "Error installing packages"
 }
 
+$env:Path += ";${env:HOMEDRIVE}\tools\cygwin\bin"
+if( -not {bash --version}) {
+	exitmsg 1 "Couldn't find 'bash' in PATH"
+}
 
 # Cygwin-specific setup will run in a separate bash terminal
 try {

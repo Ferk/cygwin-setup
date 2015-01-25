@@ -74,7 +74,7 @@ try {
 #!/bin/sh
 export CYGWIN='$CYGWIN'
 # Make sure the /bin folder is the first in the PATH, taking precedence over WINDOWS binaries
-export PATH="/bin:$PATH"
+export PATH="/bin:\$PATH"
 EOF
 	fi
 		

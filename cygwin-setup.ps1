@@ -31,10 +31,24 @@ try {
 	exitmsg 1 "Error installing packages"
 }
 
+try {
+	$cygRoot = (Get-ItemProperty HKLM:\SOFTWARE\Cygwin\setup -Name rootdir).rootdir
+	if( -not ( $env:Path -like "*${cygRoot}\bin*" ) ) {
+		echo "Adding ${cygRoot}\bin to Windows Path"
+		$env:Path += ";$cygRoot\bin"
+		[System.Environment]::SetEnvironmentVariable("PATH", $Env:Path, "Machine")
+	}
+} catch {
+	exitmsg 1 "Error setting up the environment"
+}
+
 
 # Cygwin-specific setup will run in a separate bash terminal
 try {
-echo @'
+	if( -not {bash --version}) {
+		exitmsg 1 "Couldn't find 'bash' in Windows PATH: $env:Path"
+	}
+	echo @'
 
 	echo
 	echo ' * Checking cygwin HOME folder'
@@ -48,6 +62,23 @@ echo @'
 		echo mount -m > /etc/fstab
 	fi
 	
+	echo
+	echo ' * Setting up CYGWIN environment variable
+	echo
+	if [ -e /etc/profile.d/cygwin_env.sh ]
+	then
+		echo "There's already a profile.d script for setting \$CYGWIN:"
+		cat /etc/profile.d/cygwin_env.sh
+	else
+		export CYGWIN="winsymlinks:native"
+		tee /etc/profile.d/cygwin_env.sh <<EOF
+#!/bin/sh
+export CYGWIN='$CYGWIN'
+# Make sure the /bin folder is the first in the PATH, taking precedence over WINDOWS binaries
+export PATH="/bin:$PATH"
+EOF
+	fi
+		
 	echo
 	echo ' * Fetching cygwin-setup data'
 	echo

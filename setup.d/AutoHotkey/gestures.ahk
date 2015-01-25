@@ -1,12 +1,14 @@
 /*
  * Based on: http://www.autohotkey.com/board/topic/23596-lex-mouse-gestures/
+ *
+ * Note: maybe use http://www.autohotkey.com/board/topic/86335-diy-mouse-gesture-script/
  */
 
 /*
  * Configuration Defaults:
  */
 
-m_GestureKey = RButton  ; Gesture key.
+m_GestureKey = MButton  ; Gesture key.
 m_GestureKey2 =         ; Alternate gesture key.
 m_Interval = 20         ; How long to sleep between each iteration of the gesture-recognition loop.
 m_LowThreshold = 25     ; Minimum distance to register as a gesture "stroke."
@@ -78,19 +80,6 @@ c_Zone8_6 = U
 c_Zone8_7 = UR
 
 
-/*
- * Load configuration
- */
-
-; Run "auto-execute" sections of Gestures_Default.ahk and Gestures_User.ahk, in that order.
-; Explicit labels are required in case the file contains only gesture definitions or hotkeys.
-
-if IsLabel(ErrorLevel:="DefaultGestures")
-    gosub %ErrorLevel%
-
-if IsLabel(ErrorLevel:="Gestures")
-    gosub %ErrorLevel%
-
 
 /*
  * Initialize script - don't mess with this unless you know what you're doing
@@ -102,11 +91,6 @@ G_SetTrayIcon(true)         ; Set custom tray icon (also called by ToggleGesture
 ; Note: This has the odd side-effect of "disabling" the tray menu
 ;       if the script is paused from the tray menu.
 OnMessage(0x111, "WM_COMMAND")
-
-
-; Create a group for easy identification of Windows Explorer windows.
-GroupAdd, Explorer, ahk_class CabinetWClass
-GroupAdd, Explorer, ahk_class ExploreWClass
 
 ; Some code relies on m_InitialZoneCount being set.
 if m_InitialZoneCount < 2
@@ -187,23 +171,6 @@ if m_KeylessPrefix {
  */
 
 return
-
-
-/*
- * Scripted gestures
- */
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-DefaultGestures:    ; Init section for default gestures.
-    ; Default_D_R never closes these windows:
-    GroupAdd, CloseBlacklist, ahk_class Progman         ; Desktop
-    GroupAdd, CloseBlacklist, ahk_class Shell_TrayWnd   ; Taskbar
-return
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 /*

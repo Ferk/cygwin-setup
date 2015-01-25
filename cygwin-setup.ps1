@@ -9,8 +9,17 @@ function exitmsg($exitcode, $msg, $color) {
 	exit $exitcode
 }
 
+If (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(`
+    [Security.Principal.WindowsBuiltInRole] "Administrator"))
+{
+    exitmsg 1 "You need Administrator rights to run this script!"
+}
+
 try {
-	choco version
+	if(Get-Command choco) {
+		echo "Chocolatey binary found. Checking whether it's the latest version."
+		choco update
+	}
 } catch {
 	try {
 		iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))

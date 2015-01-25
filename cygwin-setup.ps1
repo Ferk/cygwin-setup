@@ -42,7 +42,6 @@ try {
 	exitmsg 1 "Error setting up the environment"
 }
 
-
 # Cygwin-specific setup will run in a separate bash terminal
 try {
 	if( -not {bash --version}) {

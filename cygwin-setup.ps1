@@ -58,12 +58,12 @@ try {
 		echo "$HOME is already a mountpoint"
 	else
 		echo "Setting up cygwin HOME ($HOME) as a mountpoint to '$USERPROFILE'"
-		echo mount -f "$(cygpath "$USERPROFILE")" ~
-		echo mount -m > /etc/fstab
+		mount -f "$USERPROFILE" "/home/$USERNAME"
+		mount -m >/etc/fstab
 	fi
 	
 	echo
-	echo ' * Setting up CYGWIN environment variable
+	echo ' * Setting up CYGWIN environment variable'
 	echo
 	if [ -e /etc/profile.d/cygwin_env.sh ]
 	then
@@ -118,6 +118,8 @@ EOF
 	echo ' * Adding a "Bash prompt here" on context menu of folders'
 	echo
 	chere -im -t mintty
+
+	echo Done running cygwin bash setup
 '@ | bash
 }
 catch {

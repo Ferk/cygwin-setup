@@ -3,22 +3,23 @@ Windows Registry Editor Version 5.00
 ;Adds Take Ownership command to the context menu in Vista
 ;Also provides "Administrators" group with Full Control permissions.
 
-[-HKEY_CLASSES_ROOT\*\shell\runas]
+[-HKEY_CLASSES_ROOT\*\shell\TakeOwnership]
 
-[HKEY_CLASSES_ROOT\*\shell\runas]
+[HKEY_CLASSES_ROOT\*\shell\TakeOwnership]
 @="Take Ownership"
-"Extended"=""
-"NoWorkingDirectory"=""
+"HasLUAShield"=""
+;"Extended"=""
+;"NoWorkingDirectory"=""
 
-[HKEY_CLASSES_ROOT\*\shell\runas\command]
+[HKEY_CLASSES_ROOT\*\shell\TakeOwnership\command]
 @="cmd.exe /c takeown /f \"%1\" && icacls \"%1\" /grant administrators:F"
 
-[-HKEY_CLASSES_ROOT\Directory\shell\runas]
+[-HKEY_CLASSES_ROOT\Directory\shell\TakeOwnership]
 
-[HKEY_CLASSES_ROOT\Directory\shell\runas]
+[HKEY_CLASSES_ROOT\Directory\shell\TakeOwnership]
 @="Take Ownership"
-"Extended"=""
-"NoWorkingDirectory"=""
+;"Extended"=""
+;"NoWorkingDirectory"=""
 
-[HKEY_CLASSES_ROOT\Directory\shell\runas\command]
+[HKEY_CLASSES_ROOT\Directory\shell\TakeOwnership\command]
 @="cmd.exe /c takeown /f \"%1\" /r /d y && icacls \"%1\" /grant administrators:F /t"

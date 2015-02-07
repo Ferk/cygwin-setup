@@ -3,6 +3,7 @@
 ;#Include *i gestures.ahk
 #Include *i tray.ahk
 #Include *i alt_drag_window.ahk
+#Include *i JoyKeyWheel.ahk
 
 ;; #Include *i AltTab.ahk
 
@@ -15,7 +16,7 @@ LAlt & F1:: Run "mintty.exe", %USERPROFILE%
 Joy1::MsgBox joytest
 
 ;; Toggle AlwaysOnTop for the currently selected window
-#t::  Winset, Alwaysontop, , C:\tools\cygwin\
+#t::  Winset, Alwaysontop, , A
 
 ;; WASD navigation
 ;;LWin & w::Alt_Tab_Common_Function("Alt_Tab")

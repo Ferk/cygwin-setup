@@ -1,4 +1,4 @@
-﻿Windows Registry Editor Version 5.00
+Windows Registry Editor Version 5.00
 
 ; Adds the "Edit HOSTS file" context menu option to Computer (My Computer)
 ; Starts Notepad under elevated user rights to edit the HOSTS file.

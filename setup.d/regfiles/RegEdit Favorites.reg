@@ -1,4 +1,4 @@
-﻿Windows Registry Editor Version 5.00
+Windows Registry Editor Version 5.00
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites]
 "Run (Startup apps)"="Computer\\HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"

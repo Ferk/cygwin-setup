@@ -5,3 +5,7 @@ Windows Registry Editor Version 5.00
 [HKEY_CURRENT_USER\Console]
 ; Allow copy and paste from the command line.
 "QuickEdit"=dword:00000001
+
+[HKEY_CURRENT_USER\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers]
+; Always ask to run cmd as administrator
+"C:\\Windows\\System32\\cmd.exe"="RUNASADMIN"

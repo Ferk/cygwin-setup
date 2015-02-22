@@ -16,7 +16,7 @@ If (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 }
 
 try {
-	if(Get-Command choco) {
+	if(Get-Command choco -errorAction SilentlyContinue) {
 		echo "Chocolatey binary found. Checking whether it's the latest version."
 		choco update
 	}

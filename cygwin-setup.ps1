@@ -20,12 +20,11 @@ try {
 		echo "Chocolatey binary found. Checking whether it's the latest version."
 		choco update
 	}
-} catch {
-	try {
+	else {
 		iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
-	} catch {
-		exitmsg 1 "Couldn't install Chocolatey."
 	}
+} catch {
+	exitmsg 1 "Error installing or updated Chocolatey."
 }
 
 $chocopkgs = "cygwin", "cyg-get", "sudo", "sysinternals"

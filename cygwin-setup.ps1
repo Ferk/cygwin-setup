@@ -21,6 +21,7 @@ try {
 		choco update
 	}
 	else {
+		echo "Installing Chocolatey."
 		iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
 		Get-Command choco
 	}

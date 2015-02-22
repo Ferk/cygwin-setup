@@ -22,9 +22,10 @@ try {
 	}
 	else {
 		iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
+		Get-Command choco
 	}
 } catch {
-	exitmsg 1 "Error installing or updated Chocolatey."
+	exitmsg 1 "Error installing or updating Chocolatey."
 }
 
 $chocopkgs = "cygwin", "cyg-get", "sudo", "sysinternals"

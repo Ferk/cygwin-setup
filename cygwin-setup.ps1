@@ -99,29 +99,39 @@ EOF
 		else
 			git clone https://github.com/Ferk/cygwin-setup .
 		fi
-		
-		echo " ** Applying registry files"
-		regedit.exe /s setup.d/regfiles/*.reg
+		if [ "$?" = 0 ] && [ -d setup.de/regfiles ]
+		then
+			echo " ** Applying registry files"
+			regedit.exe /s setup.d/regfiles/*.reg
+		else
+			echo " !!!! ERROR FETCHING CYGWIN-SETUP !!!!"
+		fi
 	)
 	
 	echo
 	echo ' * Setting up XDG_CONFIG'
 	echo
-	mkdir -p ~/.config
-	( cd ~/.config
-		if [ -e .git ]
+	
+	if [ -d ~/.config ] && ! [ -e ~/.config/.git ]
+	then
+		mv .config "old-xdg-config"
+		rmdir "old-xdg-config" || \
+			echo "A Backup directory was created with the old settings"
+	fi
+	
+	if [ -e ~/.config/.git ]
+	then
+		( cd ~/.config && git pull )
+	else
+		git clone https://github.com/Ferk/xdg_config .config
+		
+		if [ -e .config/symlink.sh ]
 		then
-			git pull
+			.config/symlink.sh
 		else
-			mkdir -p "../old-xdg-config"
-			mv * "../old-xdg-config"
-			rmdir "../old-xdg-config" || \
-				echo "A Backup directory was created with the old settings"
-			
-			git clone https://github.com/Ferk/xdg_config .
-			./symlink.sh
+			echo " !!!! ERROR FETCHING XDG-CONFIG !!!!"
 		fi
-	)
+	fi
 	
 	echo
 	echo ' * Adding a "Bash prompt here" on context menu of folders'

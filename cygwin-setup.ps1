@@ -99,7 +99,7 @@ EOF
 		else
 			git clone https://github.com/Ferk/cygwin-setup .
 		fi
-		if [ "$?" = 0 ] && [ -d setup.de/regfiles ]
+		if [ -d setup.de/regfiles ]
 		then
 			echo " ** Applying registry files"
 			regedit.exe /s setup.d/regfiles/*.reg
@@ -114,8 +114,8 @@ EOF
 	
 	if [ -d ~/.config ] && ! [ -e ~/.config/.git ]
 	then
-		mv .config "old-xdg-config"
-		rmdir "old-xdg-config" || \
+		mv ~/.config ~/"old-xdg-config"
+		rmdir ~/"old-xdg-config" || \
 			echo "A Backup directory was created with the old settings"
 	fi
 	
@@ -123,11 +123,11 @@ EOF
 	then
 		( cd ~/.config && git pull )
 	else
-		git clone https://github.com/Ferk/xdg_config .config
+		git clone https://github.com/Ferk/xdg_config ~/.config
 		
-		if [ -e .config/symlink.sh ]
+		if [ -e ~/.config/symlink.sh ]
 		then
-			.config/symlink.sh
+			~/.config/symlink.sh
 		else
 			echo " !!!! ERROR FETCHING XDG-CONFIG !!!!"
 		fi

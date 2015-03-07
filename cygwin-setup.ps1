@@ -35,8 +35,9 @@ $chocopkgs += "7zip", "windirstat", "webpicmd", "notepadplusplus", "autohotkey",
 $cygwinpkgs = "chere", "cygutils", "cygutils-extra", "wget", "atool", "unzip", "git", "shutdown", "nosleep", "ncdu", "openssh"
 
 try {
-	choco install $chocopkgs
-	choco install $cygwinpkgs -source cygwin
+	choco install -y $chocopkgs
+	#choco install -y $cygwinpkgs -source cygwin
+	cyg-get ($cygwinpkgs -join ",")
 } catch {
 	exitmsg 1 "Error installing packages"
 }
@@ -85,6 +86,10 @@ try {
 export CYGWIN='$CYGWIN'
 # Make sure the /bin folder is the first in the PATH, taking precedence over WINDOWS binaries
 export PATH="/bin:\$PATH"
+
+alias cygg='cyg-get.bat'
+alias cygp='cygpath'
+alias xdg-open='cmd /C start "" '
 EOF
 	fi
 		

@@ -3,7 +3,6 @@
 ;#Include *i gestures.ahk
 #Include *i tray.ahk
 #Include *i alt_drag_window.ahk
-#Include *i JoyKeyWheel.ahk
 
 ;; #Include *i AltTab.ahk
 
@@ -13,31 +12,32 @@ SoundPlay, *48
 
 LAlt & F1:: Run "mintty.exe", %USERPROFILE%
 
-Joy1::MsgBox joytest
-
 ;; Toggle AlwaysOnTop for the currently selected window
 #t::
-WinGet, currentWindow, ID, A
-WinGet, ExStyle, ExStyle, ahk_id %currentWindow%
-if (ExStyle & 0x8)  ; 0x8 is WS_EX_TOPMOST.
-{
-	Winset, AlwaysOnTop, off, ahk_id %currentWindow%
-	SplashImage,,b cwffffff ct808080, Always on Top: OFF.
-	Sleep, 500
-	SplashImage, Off
-}
-else
-{
-	WinSet, AlwaysOnTop, on, ahk_id %currentWindow%
-	SplashImage,,b cwffffff ct000080, Always on Top: ON.
-	Sleep, 500
-	SplashImage, Off
-}
-return
+	WinGet, currentWindow, ID, A
+	WinGet, ExStyle, ExStyle, ahk_id %currentWindow%
+	if (ExStyle & 0x8)  ; 0x8 is WS_EX_TOPMOST.
+	{
+		Winset, AlwaysOnTop, off, ahk_id %currentWindow%
+		SplashImage,,b cwffffff ct808080, Always on Top: OFF.
+		Sleep, 500
+		SplashImage, Off
+	}
+	else
+	{
+		WinSet, AlwaysOnTop, on, ahk_id %currentWindow%
+		SplashImage,,b cwffffff ct000080, Always on Top: ON.
+		Sleep, 500
+		SplashImage, Off
+	}
+	return
 
 ;; WASD navigation
 ;;LWin & w::Alt_Tab_Common_Function("Alt_Tab")
 ;;LWin & s::Alt_Tab_Common_Function("Alt_Shift_Tab")
+
+;LWin & a::LWin & LCtrl & Left
+;LWin & d::LWin & LCtrl & Right
 
 LWin & w::
 	Send, {Alt Down}
@@ -47,11 +47,11 @@ LWin & w::
 	Send, {Alt Up}
 
 ^!n::
-IfWinExist Untitled - Notepad
-	WinActivate
-else
-	Run Notepad
-return
+	IfWinExist Untitled - Notepad
+		WinActivate
+	else
+		Run Notepad
+	return
 
 ; #InstallKeybdHook
 

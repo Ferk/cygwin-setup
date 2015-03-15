@@ -3,34 +3,40 @@
  * Tray menu subroutines
  */
 
+;; We'll use our own menu
+Menu, Tray, NoStandard ; remove standard Menu items
 
 ;; Tool Menu
-Menu, ToolMenu, add, Shutdown Timer, Menu_shutdownTimer
-Menu, ToolMenu, add, Edit /etc/hosts file, Menu_editHosts
-Menu, ToolMenu, add, regedit, Menu_runThisItem
-Menu, ToolMenu, add
-Menu, ToolMenu, add, msconfig, Menu_runThisItem
-Menu, ToolMenu, add, msinfo32, Menu_runThisItem
-Menu, ToolMenu, add, verifier, Menu_runThisItem
-Menu, ToolMenu, add, devmgmt.msc, Menu_runThisItem
-Menu, ToolMenu, add, control printers, Menu_runThisItem
-Menu, ToolMenu, add, control netconnections, Menu_runThisItem
-Menu, ToolMenu, add, control schedtasks, Menu_runThisItem
-Menu, ToolMenu, add, control userpasswords2, Menu_runThisItem
-Menu, ToolMenu, add, control admintools, Menu_runThisItem
+Menu, AdminMenu, add, Edit /etc/hosts file, Menu_editHosts
+Menu, AdminMenu, add, regedit, Menu_runThisItem
+Menu, AdminMenu, add
+Menu, AdminMenu, add, choco upgrade -y all, Menu_cmdRunThisItem
+Menu, AdminMenu, add
+Menu, AdminMenu, add, msconfig, Menu_runThisItem
+Menu, AdminMenu, add, msinfo32, Menu_runThisItem
+Menu, AdminMenu, add, verifier, Menu_runThisItem
+Menu, AdminMenu, add, devmgmt.msc, Menu_runThisItem
+Menu, AdminMenu, add, control printers, Menu_runThisItem
+Menu, AdminMenu, add, control netconnections, Menu_runThisItem
+Menu, AdminMenu, add, control schedtasks, Menu_runThisItem
+Menu, AdminMenu, add, control userpasswords2, Menu_runThisItem
+Menu, AdminMenu, add, control admintools, Menu_runThisItem
 
 ;; Main system tray menu
 Menu, Tray, Tip, Mouse Gestures
 ;Menu, Tray, NoStandard
-Menu, tray, add
+Menu, Tray, add
+Menu, Tray, add, Shutdown Timer, Menu_shutdownTimer
+Menu, Tray, Add, Magnifier, Menu_runThisItemScript
 Menu, Tray, Add, WindowKill, Menu_runThisItemScript
 Menu, tray, add
 Menu, tray, add, Run on Startup, Menu_ToggleStartup
-Menu, Tray, Add, Admin Tools, :ToolMenu 
+Menu, Tray, Add, Admin Tools, :AdminMenu
 Menu, Tray, Add
 Menu, Tray, Add, Open scripts folder, Menu_openScriptDir
+Menu, tray, add, Window Spy, Menu_windowSpy
 Menu, Tray, Add, R&eload, Menu_Reload
-Menu, tray, add  
+Menu, Tray, Add
 Menu, Tray, Add, E&xit, Menu_Exit
 
  
@@ -51,12 +57,11 @@ return
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-MenuHandler:
-MsgBox You selected %A_ThisMenuItem% from menu %A_ThisMenu%.
-return
+
 Menu_Reload:
     Reload
 	return
+	
 Menu_Exit:
 	ExitApp
 
@@ -76,6 +81,10 @@ Menu_editHosts:
 Menu_runThisItem:
 	Run %A_ThisMenuItem%
 	return
+
+Menu_cmdRunThisItem:
+	Run cmd /k %A_ThisMenuItem%
+	return
 	
 Menu_runThisItemScript:
 	Run "%A_AhkPath%" "%A_ScriptDir%\%A_ThisMenuItem%.ahk"
@@ -84,7 +93,10 @@ Menu_runThisItemScript:
 Menu_openScriptDir:
 	Run %A_ScriptDir%
 	return
-	
+
+Menu_windowSpy:
+	Run "%A_ProgramFiles%\AutoHotKey\AU3_Spy.exe"
+	return
 
 	
 Menu_ToggleStartup:

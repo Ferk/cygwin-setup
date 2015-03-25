@@ -7,7 +7,30 @@
 ;; #Include *i AltTab.ahk
 
 SoundPlay, *48
-	
+
+
+
+;; ------------------------
+;; ---- Window Groups -----
+
+;; Create a group for easy identification of Windows Explorer windows.
+GroupAdd, Explorer, ahk_class CabinetWClass
+GroupAdd, Explorer, ahk_class ExploreWClass
+
+; Gesture_D_R never closes these windows:
+; GroupAdd, CloseBlacklist, ahk_class Progman         ; Desktop
+; GroupAdd, CloseBlacklist, ahk_class Shell_TrayWnd   ; Taskbar
+
+;; Windows where the general keybindings won't take effect
+GroupAdd, GeneralBlacklist, ahk_class Valve001                   ; Source engine
+GroupAdd, GeneralBlacklist, ahk_class Valve002                   ; Source engine 2
+GroupAdd, GeneralBlacklist, ahk_class LaunchUnrealUWindowsClient ; Unreal engine
+
+;; -------------------------
+;; -- General Keybindings --
+
+#IfWinNotActive GeneralBlacklist
+
 #z::Run http://ahkscript.org/docs/scripts/
 
 LAlt & F1:: Run "mintty.exe", %USERPROFILE%
@@ -72,17 +95,6 @@ LWin & w::
 	; }
 	; Send {WheelDown 3}
 	; return
-
-;; ------------------------
-;; ---- Window Groups -----
-
-; Create a group for easy identification of Windows Explorer windows.
-; GroupAdd, Explorer, ahk_class CabinetWClass
-; GroupAdd, Explorer, ahk_class ExploreWClass
-
-; Gesture_D_R never closes these windows:
-; GroupAdd, CloseBlacklist, ahk_class Progman         ; Desktop
-; GroupAdd, CloseBlacklist, ahk_class Shell_TrayWnd   ; Taskbar
 
 
 ; Only run when Windows Explorer is active

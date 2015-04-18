@@ -29,7 +29,9 @@ try {
 	exitmsg 1 "Error installing or updating Chocolatey."
 }
 
-$chocopkgs = "cygwin", "cyg-get", "sudo", "sysinternals"
+# TODO: readd packages when fixed upstream: sudo cyg-get
+
+$chocopkgs = "cygwin", "sysinternals"
 $chocopkgs += "7zip", "windirstat", "webpicmd", "notepadplusplus", "autohotkey", "LinkShellExtension", "youtube-dl"
 
 $cygwinpkgs = "chere", "cygutils", "cygutils-extra", "wget", "atool", "unzip", "git", "shutdown", "nosleep", "ncdu", "openssh"

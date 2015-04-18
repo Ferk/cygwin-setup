@@ -120,7 +120,7 @@ EOF
 		else
 			git clone https://github.com/Ferk/cygwin-setup .
 		fi
-		if [ -d setup.d/regfiles ]
+		if [ -d regfiles ]
 		then
 			echo " ** Applying registry files"
 			regedit.exe /s setup.d/regfiles/*.reg

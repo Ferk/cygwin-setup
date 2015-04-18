@@ -48,7 +48,7 @@ try {
     		$cygLocalPackagesDir = join-path $cygRoot packages
     		$cygInstallPackageList = ($cygwinpkgs -join ",")
     		Write-Host "Attempting to install cygwin packages: $cygInstallPackageList"
-    		& $cygwinsetup -q -N -R $cygRoot -l $cygLocalPackagesDir -P $cygInstallPackageList
+    		$cygwinsetup -q -N -R $cygRoot -l $cygLocalPackagesDir -P $cygInstallPackageList
   	}
   	catch {
     		Write-Error "Please ensure you have cygwin installed (with chocolatey). To install please call 'cinst cygwin'. ERROR: $($_.Exception.Message)"

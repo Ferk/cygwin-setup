@@ -19,11 +19,13 @@ try {
 	if(Get-Command choco -errorAction SilentlyContinue) {
 		echo "Chocolatey binary found. Checking whether it's the latest version."
 		choco update
+		choco upgrade chocolatey
 	}
 	else {
 		echo "Installing Chocolatey."
 		iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
 		Get-Command choco
+		choco update
 	}
 } catch {
 	exitmsg 1 "Error installing or updating Chocolatey."
@@ -38,8 +40,19 @@ $cygwinpkgs = "chere", "cygutils", "cygutils-extra", "wget", "atool", "unzip", "
 
 try {
 	choco install -y $chocopkgs
-	#choco install -y $cygwinpkgs -source cygwin
-	cyg-get ($cygwinpkgs -join ",")
+	# TODO: use next line instead of the try-catch when chocolatey has a proper way to install cygwin packages
+	# choco install -y $cygwinpkgs -source cygwin
+	try {
+		$cygRoot = (Get-ItemProperty HKLM:\SOFTWARE\Cygwin\setup -Name rootdir).rootdir
+    		$cygwinsetup = Get-Command $cygRoot"\cygwinsetup.exe"
+    		$cygLocalPackagesDir = join-path $cygRoot packages
+    		$cygInstallPackageList = ($cygwinpkgs -join ",")
+    		Write-Host "Attempting to install cygwin packages: $cygInstallPackageList"
+    		& $cygwinsetup -q -N -R $cygRoot -l $cygLocalPackagesDir -P $cygInstallPackageList
+  	}
+  	catch {
+    		Write-Error "Please ensure you have cygwin installed (with chocolatey). To install please call 'cinst cygwin'. ERROR: $($_.Exception.Message)"
+  	}
 } catch {
 	exitmsg 1 "Error installing packages"
 }

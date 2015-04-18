@@ -60,7 +60,7 @@ try {
 try {
 	$cygRoot = (Get-ItemProperty HKLM:\SOFTWARE\Cygwin\setup -Name rootdir).rootdir
 	if( -not ( $env:Path -like "*${cygRoot}\bin*" ) ) {
-		echo "Adding ${cygRoot}\bin to Windows Path"
+		echo " ** Adding ${cygRoot}\bin to Windows Path"
 		$env:Path += ";$cygRoot\bin"
 		[System.Environment]::SetEnvironmentVariable("PATH", $Env:Path, "Machine")
 	}
@@ -82,7 +82,7 @@ try {
 	then
 		echo "$HOME is already a mountpoint"
 	else
-		echo "Setting up cygwin HOME ($HOME) as a mountpoint to '$USERPROFILE'"
+		echo " ** Setting up cygwin HOME ($HOME) as a mountpoint to '$USERPROFILE'"
 		mount -f "$USERPROFILE" "/home/$USERNAME"
 		mount -m >/etc/fstab
 	fi
@@ -92,7 +92,7 @@ try {
 	echo
 	if [ -e /etc/profile.d/cygwin_env.sh ]
 	then
-		echo "There's already a profile.d script for setting \$CYGWIN:"
+		echo " ** There's already a profile.d script for setting \$CYGWIN:"
 		cat /etc/profile.d/cygwin_env.sh
 	else
 		export CYGWIN="winsymlinks:native"
@@ -115,11 +115,12 @@ EOF
 	( cd ~/.local/cygwin
 		if [ -e .git ]
 		then
+			echo ' ** A repository already exists for cygwin-setup. Updating...'
 			git pull
 		else
 			git clone https://github.com/Ferk/cygwin-setup .
 		fi
-		if [ -d setup.de/regfiles ]
+		if [ -d setup.d/regfiles ]
 		then
 			echo " ** Applying registry files"
 			regedit.exe /s setup.d/regfiles/*.reg
@@ -136,7 +137,7 @@ EOF
 	then
 		mv ~/.config ~/"old-xdg-config"
 		rmdir ~/"old-xdg-config" || \
-			echo "A Backup directory was created with the old settings"
+			echo " ** A Backup directory was created with the old settings"
 	fi
 	
 	if [ -e ~/.config/.git ]

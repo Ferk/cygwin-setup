@@ -34,7 +34,7 @@ try {
 # TODO: readd packages when fixed upstream: sudo cyg-get
 
 $chocopkgs = "cygwin", "sysinternals"
-$chocopkgs += "7zip", "windirstat", "webpicmd", "notepadplusplus", "autohotkey", "LinkShellExtension", "youtube-dl"
+$chocopkgs += "7zip", "windirstat", "webpicmd", "notepadplusplus", "autohotkey", "LinkShellExtension", "youtube-dl", "nmap"
 
 $cygwinpkgs = "chere", "cygutils", "cygutils-extra", "wget", "atool", "unzip", "git", "shutdown", "nosleep", "ncdu", "openssh"
 

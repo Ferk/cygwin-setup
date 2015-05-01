@@ -4,6 +4,8 @@
  */
 
 ;; We'll use our own menu
+Menu, Tray, Tip, Mouse Gestures
+Menu, Tray, Icon, %A_ScriptDir%/icon.ico, , 1
 Menu, Tray, NoStandard ; remove standard Menu items
 
 ;; Tool Menu
@@ -22,9 +24,7 @@ Menu, AdminMenu, add, control schedtasks, Menu_runThisItem
 Menu, AdminMenu, add, control userpasswords2, Menu_runThisItem
 Menu, AdminMenu, add, control admintools, Menu_runThisItem
 
-;; Main system tray menu
-Menu, Tray, Tip, Mouse Gestures
-;Menu, Tray, NoStandard
+;; Main Tray menu
 Menu, Tray, add
 Menu, Tray, add, Shutdown Timer, Menu_shutdownTimer
 Menu, Tray, Add, Magnifier, Menu_runThisItemScript

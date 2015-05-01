@@ -8,7 +8,7 @@
 
 SoundPlay, *48
 
-
+#SingleInstance force
 
 ;; ------------------------
 ;; ---- Window Groups -----
@@ -21,15 +21,11 @@ GroupAdd, Explorer, ahk_class ExploreWClass
 ; GroupAdd, CloseBlacklist, ahk_class Progman         ; Desktop
 ; GroupAdd, CloseBlacklist, ahk_class Shell_TrayWnd   ; Taskbar
 
-;; Windows where the general keybindings won't take effect
-GroupAdd, GeneralBlacklist, ahk_class Valve001                   ; Source engine
-GroupAdd, GeneralBlacklist, ahk_class Valve002                   ; Source engine 2
-GroupAdd, GeneralBlacklist, ahk_class LaunchUnrealUWindowsClient ; Unreal engine
-
 ;; -------------------------
 ;; -- General Keybindings --
 
-#IfWinNotActive GeneralBlacklist
+;; Do not use them for Source Engine or Unreal engine games (we need to use ahk_class, ahk_group only groups windows open at launch)
+#if (!WinActive("ahk_class Valve001") && !WinActive("ahk_class LaunchUnrealUWindowsClient"))
 
 #z::Run http://ahkscript.org/docs/scripts/
 

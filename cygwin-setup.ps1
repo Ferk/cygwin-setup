@@ -19,7 +19,7 @@ try {
 	if(Get-Command choco -errorAction SilentlyContinue) {
 		echo "Chocolatey binary found. Checking whether it's the latest version."
 		choco update
-		choco upgrade chocolatey
+		choco upgrade -y chocolatey
 	}
 	else {
 		echo "Installing Chocolatey."
@@ -48,7 +48,7 @@ try {
     		$cygLocalPackagesDir = join-path $cygRoot packages
     		$cygInstallPackageList = ($cygwinpkgs -join ",")
     		Write-Host "Attempting to install cygwin packages: $cygInstallPackageList"
-    		& $cygwinsetup -q -N -R $cygRoot -l $cygLocalPackagesDir -P $cygInstallPackageList
+    		Start-Process "$cygwinsetup" "-q -N -R $cygRoot -l $cygLocalPackagesDir -P $cygInstallPackageList" -Wait -NoNewWindow
   	}
   	catch {
     		Write-Error "Please ensure you have cygwin installed (with chocolatey). To install please call 'cinst cygwin'. ERROR: $($_.Exception.Message)"

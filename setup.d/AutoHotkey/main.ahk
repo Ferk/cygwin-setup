@@ -4,8 +4,6 @@
 #Include *i tray.ahk
 #Include *i alt_drag_window.ahk
 
-;; #Include *i AltTab.ahk
-
 SoundPlay, *48
 
 #SingleInstance force
@@ -25,7 +23,7 @@ GroupAdd, Explorer, ahk_class ExploreWClass
 ;; -- General Keybindings --
 
 ;; Do not use them for Source Engine or Unreal engine games (we need to use ahk_class, ahk_group only groups windows open at launch)
-#if (!WinActive("ahk_class Valve001") && !WinActive("ahk_class LaunchUnrealUWindowsClient"))
+#if (!WinActive("ahk_class Valve001") && !WinActive("ahk_class SDL_app") && !WinActive("ahk_class LaunchUnrealUWindowsClient"))
 
 #z::Run http://ahkscript.org/docs/scripts/
 
@@ -52,26 +50,79 @@ LAlt & F1:: Run "mintty.exe", %USERPROFILE%
 	return
 
 ;; WASD navigation
-;;LWin & w::Alt_Tab_Common_Function("Alt_Tab")
-;;LWin & s::Alt_Tab_Common_Function("Alt_Shift_Tab")
 
-;LWin & a::LWin & LCtrl & Left
-;LWin & d::LWin & LCtrl & Right
 
-LWin & w::
-	Send, {Alt Down}
-	Sleep, 125
-	Send, {Tab}
-	Sleep, 100
-	Send, {Alt Up}
-
-^!n::
-	IfWinExist Untitled - Notepad
-		WinActivate
-	else
-		Run Notepad
+LAlt & w::
+	if(!isTaskViewOpen) {
+		SendEvent #{Tab}
+		Sleep, 100
+		isTaskViewOpen := true
+	}
+	SendEvent {Right}
 	return
 
+LAlt & s::
+	if(!isTaskViewOpen) {
+		SendEvent #{Tab}
+		Sleep, 100
+		isTaskViewOpen := true
+	}
+	SendEvent {Left}
+	return
+
+LAlt & w Up::
+	if(!isWaitingForRelease) {
+		isWaitingForRelease := true
+		while(GetKeyState("LAlt","P")) {
+			Sleep 100
+		}
+		Send {Enter}
+		isTaskViewOpen := false
+		isWaitingForRelease := false
+	}
+	return
+
+LAlt & s Up::
+	if(!isWaitingForRelease) {
+		isWaitingForRelease := true
+		while(GetKeyState("LAlt","P")) {
+			Sleep 100
+		}
+		Send {Enter}
+		isTaskViewOpen := false
+		isWaitingForRelease := false
+	}
+	return
+	
+LAlt & d::
+	SendEvent ^#{Right}
+	return
+	
+LAlt & a::
+	SendEvent ^#{Left}
+	return
+	
+; ^!n::
+	; IfWinExist Untitled - Notepad
+		; WinActivate
+	; else
+		; Run Notepad
+	; return
+
+
+; Ctrl+Alt+C - Toggle autoclick
+^!c::
+	autocliking := !autoclicking
+	SendMode Input
+	Loop
+	{
+		if (!autoclicking) {
+			break
+		}
+		Click
+	}
+    return
+	
 ; #InstallKeybdHook
 
 ; #InstallMouseHook

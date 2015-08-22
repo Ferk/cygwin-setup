@@ -12,7 +12,10 @@ Menu, Tray, NoStandard ; remove standard Menu items
 Menu, AdminMenu, add, Edit /etc/hosts file, Menu_editHosts
 Menu, AdminMenu, add, regedit, Menu_runThisItem
 Menu, AdminMenu, add
-Menu, AdminMenu, add, choco upgrade -y all, Menu_cmdRunThisItem
+
+Loop, Files, %A_ScriptDir%/scripts/*.ps1
+   Menu, AdminMenu, add, %A_LoopFileName%, Menu_runThisItemScript
+   
 Menu, AdminMenu, add
 Menu, AdminMenu, add, msconfig, Menu_runThisItem
 Menu, AdminMenu, add, msinfo32, Menu_runThisItem
@@ -27,8 +30,8 @@ Menu, AdminMenu, add, control admintools, Menu_runThisItem
 ;; Main Tray menu
 Menu, Tray, add
 Menu, Tray, add, Shutdown Timer, Menu_shutdownTimer
-Menu, Tray, Add, Magnifier, Menu_runThisItemScript
-Menu, Tray, Add, WindowKill, Menu_runThisItemScript
+Menu, Tray, Add, Magnifier, Menu_runThisItemAhk
+Menu, Tray, Add, WindowKill, Menu_runThisItemAhk
 Menu, tray, add
 Menu, tray, add, Run on Startup, Menu_ToggleStartup
 Menu, Tray, Add, Admin Tools, :AdminMenu
@@ -39,7 +42,7 @@ Menu, Tray, Add, R&eload, Menu_Reload
 Menu, Tray, Add
 Menu, Tray, Add, E&xit, Menu_Exit
 
- 
+
 ; Determine whether this script is set to run at startup
 StartupCommandline = %A_AhkPath% %A_ScriptFullPath%
 RegRead, StartupRegistry, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Run, AutoHotkey
@@ -61,7 +64,7 @@ return
 Menu_Reload:
     Reload
 	return
-	
+
 Menu_Exit:
 	ExitApp
 
@@ -76,20 +79,19 @@ Menu_shutdownTimer:
 Menu_editHosts:
 	G_EditFile(SYSTEMROOT "\System32\Drivers\etc\hosts")
 	return
-	
-	
+
 Menu_runThisItem:
 	Run %A_ThisMenuItem%
 	return
 
-Menu_cmdRunThisItem:
-	Run cmd /k %A_ThisMenuItem%
+Menu_runThisItemScript:
+    Run powershell -Command "%A_ScriptDir%/scripts/%A_ThisMenuItem%"
 	return
 	
-Menu_runThisItemScript:
+Menu_runThisItemAhk:
 	Run "%A_AhkPath%" "%A_ScriptDir%\%A_ThisMenuItem%.ahk"
 	return
-	
+
 Menu_openScriptDir:
 	Run %A_ScriptDir%
 	return
@@ -98,7 +100,7 @@ Menu_windowSpy:
 	Run "%A_ProgramFiles%\AutoHotKey\AU3_Spy.exe"
 	return
 
-	
+
 Menu_ToggleStartup:
 	RegRead, StartupRegistry, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Run, AutoHotkey
 	if(StartupRegistry == StartupCommandline) {
@@ -112,7 +114,7 @@ Menu_ToggleStartup:
 		menu, %A_ThisMenu%, Check, %A_ThisMenuItem%
 	}
 	return
- 
+
 ;TrayMenu_Open:
     ; DetectHiddenWindows, On
     ; Process, Exist

@@ -85,7 +85,7 @@ Menu_runThisItem:
 	return
 
 Menu_runThisItemScript:
-    Run powershell -Command "%A_ScriptDir%/scripts/%A_ThisMenuItem%"
+	Run powershell -Command & '%A_ScriptDir%/scripts/%A_ThisMenuItem%'
 	return
 	
 Menu_runThisItemAhk:

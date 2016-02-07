@@ -123,7 +123,7 @@ EOF
 		if [ -d regfiles ]
 		then
 			echo " ** Applying registry files"
-			regedit.exe /s setup.d/regfiles/*.reg
+			regedit.exe /s regfiles/*.reg
 		else
 			echo " !!!! ERROR FETCHING CYGWIN-SETUP !!!!"
 		fi

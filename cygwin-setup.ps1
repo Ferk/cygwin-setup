@@ -44,11 +44,11 @@ try {
 	# choco install -y $cygwinpkgs -source cygwin
 	try {
 		$cygRoot = (Get-ItemProperty HKLM:\SOFTWARE\Cygwin\setup -Name rootdir).rootdir
-    		$cygwinsetup = Get-Command $cygRoot"\cygwinsetup.exe"
+    		$cygwinsetup = (Get-Command $cygRoot"\cygwinsetup.exe").path
     		$cygLocalPackagesDir = join-path $cygRoot packages
     		$cygInstallPackageList = ($cygwinpkgs -join ",")
     		Write-Host "Attempting to install cygwin packages: $cygInstallPackageList"
-    		Start-Process "$cygwinsetup" "-q -N -R $cygRoot -l $cygLocalPackagesDir -P $cygInstallPackageList" -Wait -NoNewWindow
+    		Start-Process $cygwinsetup  "-q -N -R $cygRoot -l $cygLocalPackagesDir -P $cygInstallPackageList" -Wait -NoNewWindow
   	}
   	catch {
     		Write-Error "Please ensure you have cygwin installed (with chocolatey). To install please call 'cinst cygwin'. ERROR: $($_.Exception.Message)"
